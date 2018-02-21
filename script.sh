@@ -1,2 +1,2 @@
-sudo docker -id centos
+docker run -id centos
 
