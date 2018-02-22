@@ -1,4 +1,4 @@
-docker run -it -d centos
-docker run -it -d -p 80:80 ff426288ea90
+docker exec -it 101706e037af /bin/bash
+yum install httpd
+/usr/sbin/httpd -k start
 echo success
-
