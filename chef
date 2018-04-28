@@ -1,0 +1,77 @@
+Lab1: Create a Managed Chef server (Chef Master on Chef Cloud)
+
+https://manage.chef.io/signup
+
+Lab2: Install and setup Chef Workstation:
+
+wget https://packages.chef.io/files/stable/chefdk/2.4.17/el/7/chefdk-2.4.17-1.el7.x86_64.rpm
+
+rpm -ivh chefdk-2.4.17-1.el7.x86_64.rpm
+
+chef --version
+
+Lab3: Communication setup between Workstation and server:
+
+Download Chef-starter.zip from console.
+Extract chef-starter.zip to ~ directory on Workstation and run following
+commands:
+cd ~/chef-repo/.chef
+Add "chef_server_url "https://chefserver/organizations/yogorg"" to knife.rb.  
+knife ssl fetch
+knife ssl check
+knife client list
+
+Lab3: Default cookbook push and test between workstation and master:
+
+Run below commands from workstation:
+
+cat ~/chef-repo/cookbooks/starter/recipes/default.rb
+
+knife cookbook upload starter
+knife cookbook list
+
+Now go to console to ensure the cookbook/recipe has been pushed on the Chef server.
+
+Lab4: Node setup
+
+Make sure you have root access to start bootstraping
+
+knife bootstrap 192.168.0.20 --ssh-user root --ssh-password 'yogesh' --sudo --use-sudo-password --node-name client --run-list 'recipe[starter]'
+
+knife node list
+
+knife node show client
+
+Lab5: Go to the chef-client and run the chef-client for Master and Client communication:
+
+[root@client ~]# chef-client
+Starting Chef Client, version 13.7.16
+resolving cookbooks for run list: ["starter"]
+Synchronizing Cookbooks:
+  - starter (1.0.0)
+Installing Cookbook Gems:
+Compiling Cookbooks...
+Converging 1 resources
+Recipe: starter::default
+  * log[Welcome to Chef Yogesh, Sam Doe!] action write
+
+
+Running handlers:
+Running handlers complete
+Chef Client finished, 1/1 resources updated in 06 seconds
+[root@client ~]#
+
+Lab6: Create a new recipe for telnet installation, upload it and run on the client:
+
+vi cookbooks/starter/recipes/default.rb
+
+package 'talk' do
+  action :install
+end
+
+
+knife cookbook upload starter
+
+knife cookbook list
+
+Go to client and run the recipe: chef-client
